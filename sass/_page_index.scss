@@ -6,22 +6,24 @@
  * @param  $delay-time 	每次间隔时间
  * @param  $delay 		最小间隔时间
  */
-@mixin indexmove($m:1,$n:1,$duration:.6s,$delay-time:0,$delay:0){
+@mixin indexmove($m:1,$n:1,$duration:.6s,$delay-time:0s,$delay:0s){
 	@for $i from 1 through ($n - $m +1){
 		&:nth-of-type(#{$n - $i +1}){
-			$alldelay : $delay-time * $i + $delay;
+			$alldelay : $delay-time * ($i - 1) + $delay;
 			@include animation(slideInLeft,$duration,$alldelay);
 		}
 	}
 }
-@mixin indexhide($m:1,$n:1,$duration:.3s,$delay-time:.1s,$delay:0){
+
+@mixin moveAndHide($m:1,$n:1,$duration:.6s,$delay-time:0s,$delay:0s){
 	@for $i from 1 through ($n - $m +1){
 		&:nth-of-type(#{$n - $i +1}){
-			$alldelay : $delay-time * $i + $delay;
-			@include animation(width0,$duration,$alldelay);
+			$alldelay : $delay-time * ($i - 1) + $delay;
+			@include animation(moveAndHide,$duration,$alldelay);
 		}
 	}
 }
+
 /**
  * 计算动画所用时间
  * @param  $m      		第几个子元素开始
@@ -31,15 +33,16 @@
  * @param  $delay 		最小间隔时间
  * @return 返回动画所用事件
  */
-@function calcdelay($m:1,$n:1,$duration:.6s,$delay-time:0,$delay:0){
+@function calcdelay($m:1,$n:1,$duration:.6s,$delay-time:0s,$delay:0s){
 	$num : $n - $m  ;	// 数量
-	$all_delay : $duration  + $delay-time * ($num - 1)  + $delay;
+	$all_delay : $delay-time * ($num + 1)  + $delay;
 	@return $all_delay;
 }
 
 // 首页
 .index-page{
 	@extend %pridi;
+	user-select:none;
 	color:#1c1c1c;
 	display:flex;
 	justify-content:center;
@@ -51,6 +54,8 @@
 		font-size:81px;
 		position:relative;
 		letter-spacing:2px;
+		line-height:1;
+		a{color:#cfcfcf}
 		&:after,&:before{
 			content:'';
 			position:absolute;
@@ -59,19 +64,19 @@
 			border-top:2px solid #1c1c1c;
 			transition:width .6s ease;
 			width:0;
-			left:166px;
+			left:133px;
 			top:100%;
-			margin-top:12px;
+			margin-top:6px;
 		}
 		&:after{
 			content:attr(data-tip);
 			@extend %pridi;
 			letter-spacing:0;
 			font-size:27px;
-			left:226px;
+			right:0;
 			top:100%;
-			margin-top:19px;
-			transition:opacity .3s ease;
+			margin-top:17px;
+			transition:opacity .8s ease;
 			@include opacity(0);
 		}
 		div,span{
@@ -90,13 +95,14 @@
 				position:absolute;
 				top:100%;
 				right:0;
+				margin-top:5px;
 			}
 			&:after{
 				@include opacity(0);
 				content:attr(title);
 				white-space:nowrap;
 				font:300 40px "Microsoft YaHei",tahoma,"微软雅黑","Open Sans",Arial,"Hiragino Sans GB","STHeiti","WenQuanYi Micro Hei","宋体",SimSun,sans-serif;
-				transition:opacity .3s ease .2s;
+				transition:opacity .6s ease .2s;
 				visibility:hidden;
 			}
 			&:before{
@@ -104,6 +110,9 @@
 				width:0;
 				border-top:2px solid #cfcfcf;
 				transition:width .3s ease;
+			}
+			span:first-child{
+				color:#1c1c1c;
 			}
 		}
 	}
@@ -115,26 +124,13 @@
 		$duration : .6s;	// 默认每个动画所用时长
 		$delay: .1s;		// 默认每个动画相对于前一个的延时
 		div{
-
 			// design部分动画
 			&.design{
-				// 第一步动画
 				span{
-					@include indexmove(1,6,$duration,$delay);
-					$time : calcdelay(1,6,$duration,$delay);			// design动画第一步需要的秒数
-				}
-				// 第二步动画
-				// 收回其余字母，只保留第一个
-				&.step01-over{
-					span{
-						@include indexhide(2,6,.3s,$delay);			// 隐藏字母动画
-						$timetmp : calcdelay(2,6,.3s,$delay);
-						&:first-child{
-							transition:color .3s ease $timetmp;
-							color:#1c1c1c;
-							$time : $time + $timetmp + .3s;
-						}
-					}
+					@include moveAndHide(2,6,$duration *2,$delay);
+					$time : calcdelay(2,6,$duration *2,$delay);
+					@include indexmove(1,1,$duration ,$delay,$time);
+					$time : calcdelay(1,6,$duration,$delay );			
 				}
 			}
 			
@@ -144,28 +140,32 @@
 
 			// buy部分动画
 			&.buy{
-				// 第一步动画
 				span{
-					@include indexmove(1,3,$duration,$delay,$time);
-					$time : calcdelay(1,3,$duration,$delay,$time);		// buy第一步动画之后的总秒数
-				}
-				// 第二步动画
-				&.step01-over{
-					span{
-						@include indexhide(2,3,.3s,$delay);	
-						$timetmp : calcdelay(2,3,.3s,$delay);		
-						&:first-child{
-							transition:color .3s ease $timetmp;
-							color:#1c1c1c;
-							$time : $time + $timetmp + .3s;
-						}
-					}
+					@include moveAndHide(2,3,$duration *2,$delay,$time);
+					$time : calcdelay(2,3,$duration *2,$delay,$time);
+					@include indexmove(1,1,$duration ,$delay,$time);
+					$time : calcdelay(1,3,$duration,$delay,$time - $delay);		
 				}
 			}
-			// Crazy部分动画
-			@include indexmove(1,5,$duration,$delay, $time );
-			$time : calcdelay(1,5,$duration,$delay, $time);		
+			// azy部分动画
+			@include indexmove(3,5,$duration,$delay, $time );
+			$time : calcdelay(3,5,$duration,$delay, $time);
+			
+			// relevant部分动画
+			&.relevant{
+				span{
+					@include moveAndHide(2,8,$duration *2,$delay,$time);
+					$time : calcdelay(2,8,$duration *2,$delay,$time);
+					@include indexmove(1,1,$duration ,$delay,$time);
+					$time : calcdelay(1,8,$duration ,$delay,$time - $delay);		
+				}
+			}
+	
+			// c部分动画
+			@include indexmove(1,1,$duration,$delay, ($time - $delay * 5 ));
+			$time : calcdelay(1,1,$duration,$delay, $time);
 
+			// $time : $time + .7s;
 		}
 		// 所有动画完成后，显示下划线
 		&:before{
@@ -175,7 +175,7 @@
 		&:after{
 			transition-delay: $time + .6s;
 			@include opacity(1);
-		}	
+		}
 
 		// 鼠标覆盖时的动画
 		&.jsended{
@@ -191,41 +191,106 @@
 					transition-duration:.3s;
 				}
 				&:after{
+					transition-duration:.2s;
 					@include opacity(0);
+				}
+				.sp span:first-child{
+					animation-name:none !important;
 				}
 			}
 			.sp{
 				transition:margin .3s ease;
 				span{
-					animation-duration:.3s;
+					&:not(:first-child){
+						animation-duration:0s;
+						animation-name:none;
+						max-width:0;
+						will-change:max-width,transform,opacity;
+						@include opacity(0);
+						transform:translateY(-.25em);
+						transition:max-width .3s ease,transform .3s ease,opacity .3s ease;
+					}
+					
 					// 第一个字母抖动
-					// &:first-child{
-					// 	animation-name:shake;
-					// 	animation-iteration-count:infinite;
-					// 	animation-timing-function:ease;
-					// }
+					&:first-child{
+						animation-name:wobble;
+						animation-iteration-count:infinite;
+						animation-timing-function:ease;
+						transition:color .3s ease;
+					}
+				}
+				&.design{
+					span{
+						@for $i from 2 through 6 {
+							&:nth-of-type(#{$i}){
+								transition-delay: .05s * ( 6 - $i );
+							}
+						}
+					}
+				}
+				&.buy{
+					span{
+						@for $i from 2 through 3 {
+							&:nth-of-type(#{$i}){
+								transition-delay: .05s * ( 3 - $i );
+							}
+						}
+					}
+				}
+				&.relevant{
+					span{
+						@for $i from 2 through 8{
+							&:nth-of-type(#{$i}){
+								transition-delay: .05s * ( 8 - $i );
+							}
+						}
+					}
 				}
 				&.show{
 					margin:0 20px;
 					&:before{
 						width:66.6666%;
+						transition-delay:.3s;
 					}
 					&:after{
 						@include opacity(1);
 						visibility:visible;
+						transition-delay:.4s;
 					}
 					span{
-						animation-timing-function:ease;
-						animation-fill-mode:both;
-						animation-iteration-count:1;
-						@for $i from 2 through 6 {
+						@for $i from 2 through 8 {
 							&:nth-of-type(#{$i}){
-								animation-name:width0-reverse;
-								animation-duration:.3s;
-								animation-delay:.05s * ( $i - 2 );
+								max-width:1em;
+								@include opacity(1);
+								transform:translateY(0);
+								transition-delay: .05s * ($i - 1);
 							}
 						} 
+						&:first-child{
+							color: #cfcfcf;
+							animation-name:none;
+						}
 					}
+
+				}
+			}
+			div.design{
+				span:first-child{
+					animation-duration:4.5s;
+					animation-delay:2s;
+				}
+			}
+			div.buy{
+				span:first-child{
+					animation-duration:5s;
+					animation-delay:1.5s;
+				}
+			}
+
+			div.relevant{
+				span:first-child{
+					animation-duration:3.5s;
+					animation-delay:1.5s;
 				}
 			}
 		}
