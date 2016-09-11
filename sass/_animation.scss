@@ -28,11 +28,21 @@
 		max-width : 1em;
 		opacity:1;
 	}
-	50%{
+	60%{
 		-webkit-transform: translate3d(0, 0, 0);
     	transform: translate3d(0, 0, 0);
     	max-width : 1em;
-		opacity:1;
+		opacity:.8;
+	}
+	70%{
+		max-width : 1em;
+		opacity:0;
+	}
+	80%{
+		position:absolute;
+		max-width : 0em;
+		right:0;
+		opacity:0;
 	}
 	to{
 		-webkit-transform: translate3d(0, 0, 0);

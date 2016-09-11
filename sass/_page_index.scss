@@ -52,9 +52,18 @@
 	.cb-text{
 		@extend %pridibold;
 		font-size:81px;
-		position:relative;
 		letter-spacing:2px;
 		line-height:1;
+
+		position:absolute;
+		right: 50%;
+		top:50%;
+		width:1201px;
+		margin-top:-40.5px;
+		margin-right: -227.545px;
+		display:flex;
+		justify-content:flex-end;
+
 		a{color:#cfcfcf}
 		&:after,&:before{
 			content:'';
@@ -113,6 +122,8 @@
 			}
 			span:first-child{
 				color:#1c1c1c;
+				position:relative;
+				z-index:8;
 			}
 		}
 	}
@@ -179,6 +190,12 @@
 
 		// 鼠标覆盖时的动画
 		&.jsended{
+			position:relative;
+			width:auto;
+			right:auto;
+			margin:0;
+			top:auto;
+
 			// 隐藏下划线和提示
 			&:after,&:before{
 				transition-delay:0s;
@@ -250,6 +267,8 @@
 					margin:0 20px;
 					&:before{
 						width:66.6666%;
+						left:33.33333%;
+						right:auto;
 						transition-delay:.3s;
 					}
 					&:after{
