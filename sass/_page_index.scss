@@ -1,0 +1,233 @@
+/**
+ * 首页动画mixin
+ * @param  $m      		第几个子元素开始
+ * @param  $n      		子元素的个数
+ * @param  $duration 	持续的时间
+ * @param  $delay-time 	每次间隔时间
+ * @param  $delay 		最小间隔时间
+ */
+@mixin indexmove($m:1,$n:1,$duration:.6s,$delay-time:0,$delay:0){
+	@for $i from 1 through ($n - $m +1){
+		&:nth-of-type(#{$n - $i +1}){
+			$alldelay : $delay-time * $i + $delay;
+			@include animation(slideInLeft,$duration,$alldelay);
+		}
+	}
+}
+@mixin indexhide($m:1,$n:1,$duration:.3s,$delay-time:.1s,$delay:0){
+	@for $i from 1 through ($n - $m +1){
+		&:nth-of-type(#{$n - $i +1}){
+			$alldelay : $delay-time * $i + $delay;
+			@include animation(width0,$duration,$alldelay);
+		}
+	}
+}
+/**
+ * 计算动画所用时间
+ * @param  $m      		第几个子元素开始
+ * @param  $n      		子元素的个数
+ * @param  $duration 	持续的时间
+ * @param  $delay-time 	每次间隔时间
+ * @param  $delay 		最小间隔时间
+ * @return 返回动画所用事件
+ */
+@function calcdelay($m:1,$n:1,$duration:.6s,$delay-time:0,$delay:0){
+	$num : $n - $m  ;	// 数量
+	$all_delay : $duration  + $delay-time * ($num - 1)  + $delay;
+	@return $all_delay;
+}
+
+// 首页
+.index-page{
+	@extend %pridi;
+	color:#1c1c1c;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	background:url(../images/cb_bg.jpg) no-repeat center center;
+	overflow-x:hidden;
+	.cb-text{
+		@extend %pridibold;
+		font-size:81px;
+		position:relative;
+		letter-spacing:2px;
+		&:after,&:before{
+			content:'';
+			position:absolute;
+		}
+		&:before{
+			border-top:2px solid #1c1c1c;
+			transition:width .6s ease;
+			width:0;
+			left:166px;
+			top:100%;
+			margin-top:12px;
+		}
+		&:after{
+			content:attr(data-tip);
+			@extend %pridi;
+			letter-spacing:0;
+			font-size:27px;
+			left:226px;
+			top:100%;
+			margin-top:19px;
+			transition:opacity .3s ease;
+			@include opacity(0);
+		}
+		div,span{
+			float:left;
+			animation-fill-mode:both;
+		}
+		span{
+			max-width:1em;
+			overflow:hidden;
+		}
+		.sp{
+			color:#cfcfcf;
+			position:relative;
+			cursor:pointer;
+			&:after,&:before{
+				position:absolute;
+				top:100%;
+				right:0;
+			}
+			&:after{
+				@include opacity(0);
+				content:attr(title);
+				white-space:nowrap;
+				font:300 40px "Microsoft YaHei",tahoma,"微软雅黑","Open Sans",Arial,"Hiragino Sans GB","STHeiti","WenQuanYi Micro Hei","宋体",SimSun,sans-serif;
+				transition:opacity .3s ease .2s;
+				visibility:hidden;
+			}
+			&:before{
+				content:'';
+				width:0;
+				border-top:2px solid #cfcfcf;
+				transition:width .3s ease;
+			}
+		}
+	}
+
+	// 加载完毕之后才开始动画
+	&.jsready .cb-text{
+		// 整体div动画
+		$time:0;			// 当前所用时间
+		$duration : .6s;	// 默认每个动画所用时长
+		$delay: .1s;		// 默认每个动画相对于前一个的延时
+		div{
+
+			// design部分动画
+			&.design{
+				// 第一步动画
+				span{
+					@include indexmove(1,6,$duration,$delay);
+					$time : calcdelay(1,6,$duration,$delay);			// design动画第一步需要的秒数
+				}
+				// 第二步动画
+				// 收回其余字母，只保留第一个
+				&.step01-over{
+					span{
+						@include indexhide(2,6,.3s,$delay);			// 隐藏字母动画
+						$timetmp : calcdelay(2,6,.3s,$delay);
+						&:first-child{
+							transition:color .3s ease $timetmp;
+							color:#1c1c1c;
+							$time : $time + $timetmp + .3s;
+						}
+					}
+				}
+			}
+			
+			// oar部分动画	
+			@include indexmove(7,9,$duration,$delay, $time );	
+			$time : calcdelay(7,9,$duration,$delay, $time);		// oar动画之后的总秒数
+
+			// buy部分动画
+			&.buy{
+				// 第一步动画
+				span{
+					@include indexmove(1,3,$duration,$delay,$time);
+					$time : calcdelay(1,3,$duration,$delay,$time);		// buy第一步动画之后的总秒数
+				}
+				// 第二步动画
+				&.step01-over{
+					span{
+						@include indexhide(2,3,.3s,$delay);	
+						$timetmp : calcdelay(2,3,.3s,$delay);		
+						&:first-child{
+							transition:color .3s ease $timetmp;
+							color:#1c1c1c;
+							$time : $time + $timetmp + .3s;
+						}
+					}
+				}
+			}
+			// Crazy部分动画
+			@include indexmove(1,5,$duration,$delay, $time );
+			$time : calcdelay(1,5,$duration,$delay, $time);		
+
+		}
+		// 所有动画完成后，显示下划线
+		&:before{
+			width:322px;
+			transition-delay: $time;
+		}
+		&:after{
+			transition-delay: $time + .6s;
+			@include opacity(1);
+		}	
+
+		// 鼠标覆盖时的动画
+		&.jsended{
+			// 隐藏下划线和提示
+			&:after,&:before{
+				transition-delay:0s;
+			}
+			&.hide{
+				&:before{
+					right:-32px;
+					left:auto;
+					width:0;
+					transition-duration:.3s;
+				}
+				&:after{
+					@include opacity(0);
+				}
+			}
+			.sp{
+				transition:margin .3s ease;
+				span{
+					animation-duration:.3s;
+					// 第一个字母抖动
+					// &:first-child{
+					// 	animation-name:shake;
+					// 	animation-iteration-count:infinite;
+					// 	animation-timing-function:ease;
+					// }
+				}
+				&.show{
+					margin:0 20px;
+					&:before{
+						width:66.6666%;
+					}
+					&:after{
+						@include opacity(1);
+						visibility:visible;
+					}
+					span{
+						animation-timing-function:ease;
+						animation-fill-mode:both;
+						animation-iteration-count:1;
+						@for $i from 2 through 6 {
+							&:nth-of-type(#{$i}){
+								animation-name:width0-reverse;
+								animation-duration:.3s;
+								animation-delay:.05s * ( $i - 2 );
+							}
+						} 
+					}
+				}
+			}
+		}
+	}
+}

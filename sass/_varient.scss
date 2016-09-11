@@ -1,0 +1,25 @@
+// Pridi字体
+@font-face{
+	font-family:'Pridi';
+	font-style:normal;
+	src:url('../fonts/Pridi-Regular.ttf') format('truetype');
+}
+
+@font-face{
+	font-family:'Pridi-bold';
+	font-style:normal;
+	src:url('../fonts/Pridi-Bold.ttf') format('truetype');
+}
+
+%pridi{
+	font-family:'Pridi';
+}
+
+%pridibold{
+	font-family:'Pridi-bold';
+}
+
+
+
+
+

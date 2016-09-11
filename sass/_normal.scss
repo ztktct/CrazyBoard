@@ -1,0 +1,268 @@
+%inlblock{
+	display:inline-block;
+	*zoom:1;
+	*display:inline;
+}
+// 清除浮动
+%clearfix{
+	*zoom:1;
+	&:after{
+		content:'';
+		height:0;
+		display:table;
+		clear:both;
+	}
+}
+// 一像素边框
+@mixin one-px-border($color:#d9d9d9){
+	position:relative;
+	&:after{
+		content: " ";
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		border-top: 1px solid $color;
+		transform: scaleY(.5);
+	}
+}
+
+@mixin one-px-border-top($color:#d9d9d9){
+	position:relative;
+	&:before{
+		content: " ";
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		border-top: 1px solid $color;
+		transform: scaleY(.5);
+	}
+}
+
+%one-px-border{
+	@include one-px-border();
+}
+.one-px-border{
+	@extend %one-px-border;
+}
+
+// text-hide,文字过多时渐变隐藏
+%text-hide{
+	overflow:hidden;
+	position:relative;
+	&:after{
+		content:'';
+    	position:absolute;
+    	left:0;
+    	right:0;
+    	bottom:0;
+    	height:2em;
+    	background-image: linear-gradient(to bottom , transparent,#fff);
+	}
+}
+
+// 隐藏最后一个字
+%text-hide-one{
+	overflow:hidden;
+	position:relative;
+	&:after{
+		content:'';
+		position:absolute;
+		right:0;
+		width:1.25em;
+		height:1.5em;
+		background:linear-gradient(to right,transparent,#fff);
+		bottom:0;
+	}
+}
+
+
+// IE8-能识别的hack
+@mixin ie8(){
+	@media \0screen\,screen\9{
+		@content;
+	}
+}
+
+
+@mixin ie10(){
+	@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	   @content;
+	}
+}
+
+// 火狐能识别
+@mixin firefox(){
+	@-moz-document url-prefix(){
+		@content;
+	}
+}
+
+
+// @media
+@mixin media($max,$min:''){
+	@if($min==''){
+		@media screen and (max-width:$max){
+			@content;
+		}
+	}@else{
+		@media screen and (max-width:$max) and (min-width:$min){
+			@content;
+		}
+	}
+}
+
+@mixin mediamin($min){
+	@media screen and (min-width:$min){
+		@content;
+	}
+}
+
+//文字溢出省略
+@mixin ellipsis($lines){
+	@if($lines==1){
+		overflow:hidden;
+		text-overflow:ellipsis;
+		white-space:nowrap;
+	}@else{
+		//多行省略,webkit内核
+		display:-webkit-box;
+		overflow:hidden;
+		text-overflow:ellipsis;
+		word-break:break-all;
+		-webkit-box-orient:vertical;
+		-webkit-line-clamp:$lines;
+	}
+}
+
+// rgba,传入类似rgba(0,0,0,.5)格式
+@mixin rgbaNew($rgba){
+	background:$rgba;
+	@include ie8(){
+		background:transparent;
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($rgba)}', endColorstr='#{ie-hex-str($rgba)}');
+	}
+}
+
+
+// opacity
+@mixin opacity($val){
+	opacity:$val;
+	@include ie8(){
+		filter: progid:DXImageTransform.Microsoft.Alpha(opacity=#{$val*100});
+	}
+}
+
+// 三角箭头,利用:after,:before
+// 三角的宽度，要显示的三角所在的方位，颜色，坐标
+// 在需要产生三角的元素中使用
+@mixin trangle($width,$decoration,$color,$bgcolor,$left,$top){
+	&:after,&:before{
+		content:'';
+		width:0;
+		height: 0;
+		border:$width solid transparent;
+		position:absolute;
+		@if($decoration==left){
+			border-right:0;
+		}@else if($decoration==right){
+			border-left:0;
+		}@else if($decoration==top){
+			border-bottom:0;
+		}@else if($decoration==bottom){
+			border-top:0;
+		}
+	}
+	&:after{
+		border-#{$decoration}-color:$bgcolor;
+		left:$left;
+		top:$top;
+	}
+	&:before{
+		border-#{$decoration}-color:$color;
+		@if($decoration==left){
+			left:$left - 1;
+			top:$top;
+		}@else if($decoration==right){
+			left:$left+1;
+			top:$top;
+		}@else if($decoration==top){
+			left:$left;
+			top:$top - 1;
+		}@else if($decoration==bottom){
+			left:$left;
+			top:$top+1;
+		}
+		z-index:5;
+	}
+}
+
+// 列表左右对齐
+// 类 ul>li 格式,放在类ul内，不限ul
+//
+//@para $width:宽度
+//@para $item:子类选择器
+//@para $int:初始间隔
+//@para $cows:列数
+//
+@mixin justify($width,$item,$int,$cows){
+	$marL:$int / $width;//间隔在整个宽度的百分比
+	margin-left: - $marL*100%;
+	@extend %clearfix;
+	#{$item}{
+		float:left;
+		width:(($width - $int * $cows) / $cows) / $width *100%;
+		margin-left:$marL * 100%;
+	}
+}
+
+
+// px转rem
+@mixin px2rem($attr,$num,$base:75){
+	$list:();    //存储所有转换后的值
+	
+	// 遍历所有值并转换为rem单位
+	@for $i from 1 through length($num){
+		$tmp:nth($num,$i);
+
+		// 判断有无单位px，有就去掉
+		@if(not unitless($tmp)){
+			$tmp : $tmp / ($tmp * 0 + 1);
+		}
+		
+		$tmp : $tmp / $base;
+
+		// 计算单个rem值
+		$value:#{$tmp}rem;
+		// 添加到列表中
+		$list:append($list,$value);
+	}
+	// 设置属性值
+	#{$attr}:$list;
+
+}
+
+// 右箭头
+@mixin arrow-right($size:6px,$bgcolor:#fff,$color:#333){
+	position:relative;
+	&:after,&:before{
+		content:'';
+		position:absolute;
+		border-width:$size;
+		border-color:$color;
+		border-right:0;
+		border-top-color:transparent;
+		border-bottom-color:transparent;
+		border-style:solid;
+		right:0;
+		top:50%;
+		transform:translateY(-50%);
+	}
+	&:after{
+		border-left-color:$bgcolor;
+		margin-right:1px;
+	}
+}
+
+
