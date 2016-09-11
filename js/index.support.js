@@ -1,6 +1,9 @@
 $(document).ready(function() {
 
-	$('.index-page').addClass('jsready')
+	$(window).on('load',function(){
+		$('.index-page').addClass('jsready');
+	});
+	
 
     // .sp下的第一个span元素
     // 若它的animationend事件触发，表示第一步动画完成
