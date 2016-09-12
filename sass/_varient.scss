@@ -2,13 +2,17 @@
 @font-face{
 	font-family:'Pridi';
 	font-style:normal;
-	src:url('../fonts/Pridi-Regular.ttf') format('truetype');
+	src: url('../fonts/Pridi-Regular.eot'); /* IE9 Compat Modes */
+	src: url('../fonts/Pridi-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+		 url('../fonts/Pridi-Regular.ttf') format('truetype');
 }
 
 @font-face{
 	font-family:'Pridi-bold';
 	font-style:normal;
-	src:url('../fonts/Pridi-Bold.ttf') format('truetype');
+	src: url('../fonts/Pridi-Bold.eot'); /* IE9 Compat Modes */
+	src: url('../fonts/Pridi-Bold.eot?#iefix') format('embedded-opentype'),
+		 url('../fonts/Pridi-Bold.ttf') format('truetype');
 }
 
 %pridi{

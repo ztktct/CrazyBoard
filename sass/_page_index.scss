@@ -55,6 +55,7 @@
 		letter-spacing:2px;
 		line-height:1;
 
+		// 由于要求保持不偏移，一开始采用绝对定位
 		position:absolute;
 		right: 50%;
 		top:50%;
@@ -71,11 +72,12 @@
 		}
 		&:before{
 			border-top:2px solid #1c1c1c;
-			transition:width .6s ease;
+			transition:width .6s ease,opacity .1s ease;
 			width:0;
-			left:133px;
+			left:29.23%;
 			top:100%;
 			margin-top:6px;
+			@include opacity(0);
 		}
 		&:after{
 			content:attr(data-tip);
@@ -91,6 +93,7 @@
 		div,span{
 			float:left;
 			animation-fill-mode:both;
+			opacity:0;
 		}
 		span{
 			max-width:1em;
@@ -108,7 +111,7 @@
 			}
 			&:after{
 				@include opacity(0);
-				content:attr(title);
+				content:attr(data-title);
 				white-space:nowrap;
 				font:300 40px "Microsoft YaHei",tahoma,"微软雅黑","Open Sans",Arial,"Hiragino Sans GB","STHeiti","WenQuanYi Micro Hei","宋体",SimSun,sans-serif;
 				transition:opacity .6s ease .2s;
@@ -119,6 +122,10 @@
 				width:0;
 				border-top:2px solid #cfcfcf;
 				transition:width .3s ease;
+			}
+			span:not(:first-child){
+				position:absolute;
+        	right: 0;
 			}
 			span:first-child{
 				color:#1c1c1c;
@@ -134,6 +141,9 @@
 		$time:0;			// 当前所用时间
 		$duration : .6s;	// 默认每个动画所用时长
 		$delay: .1s;		// 默认每个动画相对于前一个的延时
+		div,span{
+			opacity:1;
+		}
 		div{
 			// design部分动画
 			&.design{
@@ -168,20 +178,21 @@
 					@include moveAndHide(2,8,$duration *2,$delay,$time);
 					$time : calcdelay(2,8,$duration *2,$delay,$time);
 					@include indexmove(1,1,$duration ,$delay,$time);
-					$time : calcdelay(1,8,$duration ,$delay,$time - $delay);		
+					$time : calcdelay(1,8,$duration ,$delay,$time);		
 				}
 			}
 	
 			// c部分动画
-			@include indexmove(1,1,$duration,$delay, ($time - $delay * 5 ));
+			@include indexmove(1,1,$duration,$delay, ($time - $delay * 7 ));
 			$time : calcdelay(1,1,$duration,$delay, $time);
 
-			// $time : $time + .7s;
+			$time : $time + .3s;
 		}
 		// 所有动画完成后，显示下划线
 		&:before{
-			width:322px;
+			width:70.755%;
 			transition-delay: $time;
+			@include opacity(1);
 		}
 		&:after{
 			transition-delay: $time + .6s;
@@ -216,9 +227,15 @@
 				}
 			}
 			.sp{
-				transition:margin .3s ease;
+				transition:padding .3s ease;
+				&.iehack{
+					span:not(:first-child){
+						width:0;
+					}
+				}
 				span{
 					&:not(:first-child){
+						position:static;
 						animation-duration:0s;
 						animation-name:none;
 						max-width:0;
@@ -234,6 +251,7 @@
 						animation-iteration-count:infinite;
 						animation-timing-function:ease;
 						transition:color .3s ease;
+						transform-origin:bottom center;
 					}
 				}
 				&.design{
@@ -264,7 +282,7 @@
 					}
 				}
 				&.show{
-					margin:0 20px;
+					padding:0 20px;
 					&:before{
 						width:66.6666%;
 						left:33.33333%;
@@ -311,6 +329,99 @@
 					animation-duration:3.5s;
 					animation-delay:1.5s;
 				}
+			}
+		}
+	}
+
+	// 移动端
+	&.mobile{
+		.cb-text{
+			font-size:50px;
+			width:806px;
+			margin-top:-25px;
+			margin-right:-144.305px;
+			&:after{
+				font-size:16px;
+			}
+			.sp:after{
+				font-size:25px;
+			}
+			&.jsended{
+				.sp{
+					&:before{
+						margin-top:0;
+					}
+					&:after{
+						width:100%;
+						text-align:center;
+					}
+					span:not(:first-child){
+						display:none;
+					}
+					a{
+						display:block;
+						position:relative;
+						&:before,&:after{
+							position:absolute;
+							left:50%;
+							color:#fff;
+							transform:translateX(-50%) perspective(400px) rotate3d(1, 0, 0, 90deg);
+							animation-duration:1s;
+							animation-timing-function:ease-in;
+							animation-fill-mode:both;
+							animation-iteration-count:1;
+							transform-origin:center bottom;
+						}
+						&:before{
+							content:attr(title);
+							@extend %pridi;
+							border-radius:3px;
+							bottom:0;
+							font-size:16px;
+							padding:5px;
+							background:#cfcfcf;
+						}
+						&:after{
+							content:'';
+							border-color:transparent;
+							border-style:solid;
+							border-width:6px;
+							border-top-color:#cfcfcf;
+							border-bottom:0;
+						}
+					}
+
+					&.show{
+						a:after,a:before{
+							animation-name:flipInX;
+    						transform:translateX(-50%) perspective(400px) rotate3d(1, 0, 0, -5deg);
+						}
+						&:before{
+							left:0;
+							width:100%;
+						}
+					}
+				}
+			} 
+		}
+	}
+
+	// IE9-
+	&.ie9-{
+		.cb-text.jsended{
+			width:auto !important;
+			position:absolute !important;
+			right: 50% !important;
+			top:50% !important;
+			margin-top:-40.5px !important;
+			margin-right: -227.545px !important;
+		}
+		.jsended .sp span{
+			max-width:0;
+			overflow:hidden;
+			transform:translateY(0) !important;
+			&:first-child{
+				max-width:none;
 			}
 		}
 	}
