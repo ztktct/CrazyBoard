@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazyboard</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="swiper-wrapper">
+
+            <div class="swiper-slide page page01" style="background-image:url(images/pic_design01.png)">
+                <div class="page page-ctx page-ctx01" style="background-image:url(images/pic_design01_1.png)"></div>
+                <div class="page-ctx page-ctx02">
+                    <a href="index.html" title="CrazyBoard"><img src="images/text/CrazyBoard.png" class="logo" alt="CrazyBoard"></a>
+                    <div class="btn-toggle" id="btn-toggle">
+                        <span class="state01">开灯</span>
+                        <span class="state02">熄灯</span>
+                    </div>
+                    <img class="txt-wrap" src="images/text/pic_design01_txt.png" alt="">
+                </div>
+            </div>
+
+            <div class="swiper-slide page page02" style="background-image:url(images/pic_design02.png)">
+                <img class="txt-wrap fadeInRight" src="images/text/pic_design02_txt.png" alt="">
+            </div>
+
+            <div class="swiper-slide page page03" style="background-image:url(images/pic_design03.png)">
+                <img class="txt-wrap fadeInLeft" src="images/text/pic_design03_txt.png" alt="">
+            </div>
+
+            <div class="swiper-slide page page04" style="background-image:url(images/pic_design04.png)">
+                <img class="txt-wrap fadeInDown" src="images/text/pic_design04_txt.png" alt="">
+            </div>
+
+            <div class="swiper-slide page page05" style="background-image:url(images/pic_design05.jpg)">
+                <img class="txt-wrap fadeInRight" src="images/text/pic_design05_txt.png" alt="">
+            </div>
+
+            <div class="swiper-slide page page06" style="background-image:url(images/pic_design06.jpg)">
+                <img class="txt-wrap fadeInRight" src="images/text/pic_design06_txt.png" alt="">
+            </div>
+
+            <div class="swiper-slide page page07" style="background-image:url(images/pic_design07.jpg)">
+                <div class="page-ctx page-ctx01" id="page01_inside">
+                	<img class="txt-wrap fadeInRight" src="images/text/pic_design07_txt.png " alt=" ">
+                	<!-- 第7页内部切换 -->
+                	<div class="swiper-wrapper">
+	                	<div class="swiper-slide page" style="background-image:url(images/pic_design07.jpg)"></div>
+	                	<div class="swiper-slide page" style="background-image:url(images/pic_design07_qin.jpg)"></div>
+	                	<div class="swiper-slide page" style="background-image:url(images/pic_design07_zong.jpg)"></div>
+                	</div>
+                	<!-- 分页 -->
+                	<div class="inside-pagination "></div>
+        		</div>
+        	</div>
+
+        	<div class="swiper-slide page page08 " style="background-image:url(images/pic_design08.jpg) ">
+        		<img class="txt-wrap fadeInRight" src="images/text/pic_design08_txt.png " alt=" ">
+        	</div>
+
+        	<div class="swiper-slide page page09 " style="background-image:url(images/pic_design09.png) ">
+        		<img class="txt-wrap fadeInRight" src="images/text/pic_design09_txt.png " alt=" ">
+        	</div>
+
+        </div>
+        <!-- 分页 -->
+        <div class="swiper-pagination ">
+            <div class="paginations"></div>
+            <div id="page_back" class="hide">回到顶部</div>
+        </div>
+    </div>
+	<script src="js/swiper-3.2.5.min.js "></script>
+	<script src="js/crazyboard.design.js "></script>
+</body>
+</html>

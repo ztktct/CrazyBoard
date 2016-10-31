@@ -243,6 +243,56 @@
 
 }
 
+// px转vw
+@mixin px2vw($attr,$num,$base:1920){
+	$list:();    //存储vw单位
+	$list2:();	 //存储%单位
+	$base:$base / 100;	// 1vw = n px
+	// 遍历所有值并转换为vw单位
+	@for $i from 1 through length($num){
+		$tmp:nth($num,$i);
+
+		// 判断有无单位px，有就去掉
+		@if(not unitless($tmp)){
+			$tmp : $tmp / ($tmp * 0 + 1);
+		}
+		
+		$tmp : $tmp / $base;
+
+		// 计算单个vw值
+		// 如果浏览器不支持vw，换用%
+		// $percent:$tmp * 1%;
+		$value:#{$tmp}vw;
+		// 添加到列表中
+		$list:append($list,$value);
+		// $list2:append($list2,$percent);
+	}
+	// 设置属性值
+	// #{$attr}:$list2;
+	#{$attr}:$list;
+
+}
+
+// 垂直方向百分比
+@function vertical($vertical, $base:1080){
+	// 判断有无单位px，有就去掉
+	@if(not unitless($vertical)){
+		$vertical : $vertical / ($vertical * 0 + 1);
+	}
+
+	@return $vertical / $base * 100%;
+}
+
+// 水平方向百分比
+@function horizontal($horizontal, $base:1920){
+	// 判断有无单位px，有就去掉
+	@if(not unitless($horizontal)){
+		$horizontal : $horizontal / ($horizontal * 0 + 1);
+	}
+
+	@return $horizontal / $base * 100%;
+}
+
 // 右箭头
 @mixin arrow-right($size:6px,$bgcolor:#fff,$color:#333){
 	position:relative;

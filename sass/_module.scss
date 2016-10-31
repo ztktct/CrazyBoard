@@ -1,0 +1,126 @@
+$font-family:"Microsoft YaHei",tahoma,"微软雅黑","Open Sans",Arial,"Hiragino Sans GB","STHeiti","WenQuanYi Micro Hei","宋体",SimSun,sans-serif;
+
+html,body{
+	height:100%;
+	overflow:hidden;
+	font-family:$font-family;
+	text-rendering:optimizeLegibility;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+	-webkit-tap-highlight-color: transparent;
+	user-select:none;
+}
+::-webkit-scrollbar{width:2px;height:2px;}
+::-webkit-scrollbar-track-piece{background:#ccc;-webkit-border-radius:2px;}
+::-webkit-scrollbar-thumb:vertical{height: 2px;background:#999;-webkit-border-radius:2px;}
+::-webkit-scrollbar-thumb:horizontal{width: 2px;background:#ccc;-webkit-border-radius:2px;}
+div,p,figure,h2,h3,ul,li{
+	margin:0;
+}
+
+a{text-decoration:none;}
+ul,li{
+	list-style:none;
+	padding:0;
+}
+table{border-collapse:collapse;border-spacing:0;}
+
+// 全屏页面
+.page{
+	height:100%;
+	position:relative;
+	background-repeat:no-repeat;
+	background-size:cover;
+	overflow:hidden;
+	&-ctx{
+		position:absolute;
+		height:100%;
+		left:0;
+		right:0;
+		bottom:0;
+		top:0;
+	}
+	// 文字容器
+	.txt-wrap{
+		position:absolute;
+		z-index:5;
+		transition:transform 1s ease,opacity 1s ease;
+	}
+	&.animate{
+		.txt-wrap{
+			transform:none;
+			opacity:1;
+		}
+	}
+}
+
+// 全屏分页
+.swiper-pagination{
+	position:absolute;
+	z-index:10;
+	right:2%;
+	top:50%;
+	transform:translateY(-50%);
+	.swiper-pagination-bullet{
+		margin:16px 0;
+		color:#ceced0;
+		cursor:pointer;
+		position:relative;
+		.point{
+			display:block;
+			width:4px;
+			height:4px;
+			border-radius:50%;
+			background:currentColor;
+			transition:transform .3s ease;
+		}
+		p{
+			position:absolute;
+			font-size:14px;
+			right:19px;
+			top:50%;
+			margin:-9px 0 0;
+			white-space:nowrap;
+			transform:scale(0);
+			transform-origin: right center;
+			opacity:0;
+			transition:transform .3s ease, opacity .3s ease;
+		}
+	}
+	.swiper-pagination-bullet-active{
+		.point{
+			transform:scale(2);
+		}
+		p{
+			transform:scale(1);
+			opacity:1;
+		}
+	}
+}
+
+// 回到顶部
+#page_back{
+	position:absolute;
+	top:100%;
+	right:50%;
+	transform:translateX(50%);
+	color:#fff;
+	background:#333;
+	border-radius:50%;
+	width:45px;
+	height:45px;
+	padding:9px;
+	text-align:center;
+	font-size:12px;
+	box-sizing:border-box;
+	cursor:pointer;
+	z-index:18;
+	opacity:.4;
+	transition:opacity .3s ease;
+	&:hover{
+		opacity:.8;
+	}
+	&.hide{
+		opacity:0;
+	}
+}

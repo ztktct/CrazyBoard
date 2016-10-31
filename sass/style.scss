@@ -1,11 +1,17 @@
-@import 'varient';  // 变量
+@import 'varient';    // 变量
 
-@import 'normal';	// 常用placeholder/mixin
+@import 'mixins';	  // 常用placeholder/mixin
 
-@import 'reset';	// 样式重置
+@import 'normalize';  // 样式统一
 
-@import 'normalize';// 样式统一
+@import 'module';	  // 样式重置
 
-@import 'animation';// 动画
+@import 'animation';  // 动画
 
-@import 'page_index';// 首页样式
+@import 'page_index'; // 首页样式
+
+@import 'page_design';// 设计页面样式
+
+@import 'page_buy';   // 购买页面样式
+
+@import 'page_relative'; // 相关
