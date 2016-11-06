@@ -261,14 +261,14 @@
 
 		// 计算单个vw值
 		// 如果浏览器不支持vw，换用%
-		// $percent:$tmp * 1%;
+		$percent:$tmp * 1%;
 		$value:#{$tmp}vw;
 		// 添加到列表中
 		$list:append($list,$value);
-		// $list2:append($list2,$percent);
+		$list2:append($list2,$percent);
 	}
 	// 设置属性值
-	// #{$attr}:$list2;
+	#{$attr}:$list2;
 	#{$attr}:$list;
 
 }

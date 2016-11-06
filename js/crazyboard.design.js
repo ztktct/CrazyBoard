@@ -36,7 +36,17 @@
 
     var d = document;
 
-    d.addEventListener('DOMContentLoaded', function () {
+    var on = function on(obj, event, fn) {
+        if (d.addEventListener) {
+            obj.addEventListener(event, fn);
+        } else if (d.attachEvent) {
+            obj.attachEvent(event, fn);
+        } else {
+            obj['on' + event] = fn;
+        }
+    };
+
+    _z.ready(function () {
         // 全屏滚动
         var page_back = d.getElementById('page_back'); // 回到顶部按钮
         var swiper = new Swiper('.page-container', {
@@ -72,15 +82,15 @@
             }
         });
 
-        page_back.addEventListener('click', function () {
+        // 回到顶部
+        on(page_back, 'click', function () {
             swiper.slideTo(0);
         });
 
         // 第一页 开关灯
         var toggle = d.getElementById('btn-toggle');
         var page01 = d.querySelector('.page01');
-        toggle.addEventListener('click', function () {
-            console.log(11);
+        on(toggle, 'click', function () {
             if (hasClass(page01, 'show')) {
                 removeClass(page01, 'show');
             } else {

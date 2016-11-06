@@ -34,7 +34,18 @@
 
     const d = document;
 
-    d.addEventListener('DOMContentLoaded', function() {
+    const on = function(obj, event, fn){
+        if(d.addEventListener){
+            obj.addEventListener(event, fn);
+        }else if(d.attachEvent){
+            obj.attachEvent(event, fn);
+        }else{
+            obj['on'+event]=fn;
+        }
+    };
+
+    // on(d,'DOMContentLoaded', function() {
+    _z.ready(function(){
         // 全屏滚动
         let page_back = d.getElementById('page_back'); // 回到顶部按钮
         let swiper = new Swiper('.page-container', {
@@ -80,15 +91,14 @@
             }
         });
 
-        page_back.addEventListener('click',function(){
+        on(page_back, 'click',function(){
             swiper.slideTo(0);
         })
 
         // 第一页 开关灯
         let toggle = d.getElementById('btn-toggle');
         let page01 = d.querySelector('.page01');
-        toggle.addEventListener('click', function() {
-        	console.log(11)
+        on(toggle, 'click', function() {
         	if(hasClass(page01,'show')){
         		removeClass(page01,'show')
         	}else{
